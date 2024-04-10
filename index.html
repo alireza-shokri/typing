@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>type</title>
+    <style>
+        body{
+            background-color: rgb(15, 15, 65);
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .parent{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70%;
+            margin: 40px auto;
+        }
+        .time{
+            width: 170px;
+            text-align: center;
+            padding: 5px;
+            background-color: rgb(163, 64, 28);
+            border-radius: 4px;
+        }
+        .ul{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .li{
+            list-style-type: none;
+            padding: 3px;
+            margin: 1px;
+            font-size: 28px;
+            color: wheat;
+        }
+        .parent_h2_refrsh{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .refrsh{
+            width: 170px;
+            text-align: center;
+            padding: 7.5px;
+            background-color: rgb(38, 107, 107);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .refrsh:hover{
+            background-color: rgb(46, 139, 139);
+        }
+        .speed{
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="parent">
+        <div class="parent_h2_refrsh">
+            <h3 class="refrsh">REFRSH</h3>
+            <h2 class="time">00:00:00</h2>
+        </div>
+        <ul class="ul"></ul>
+    </div>
+
+    <script>
+        let matn='Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quam ut ullam. Itaque quod ad ullam minima. Distinctio, laborum ipsam? Assumenda eius ipsum unde perferendis vitae. Perspiciatis dignissimos maxime, aliquid quis quia, repudiandae, nisi voluptatum quas eos itaque aperiam. Ea ipsam sint neque.'
+
+        const worold=[
+        "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p",
+        "q","r","s","t","u","v","w","x","y","z"," ",".",",","!",":","?",";"
+        ]
+        let ul=document.querySelector('.ul');
+        let time=document.querySelector('.time');
+        let all=document.getElementsByClassName('li');
+        let refrsh=document.querySelector('.refrsh');
+        refrsh.addEventListener('click',refrshhandler);
+        document.body.addEventListener('keydown',my)
+        let shomar=0;
+
+        
+            for (var i=0;i<matn.length;i++){
+           var newli=document.createElement('li');
+            newli.innerHTML=matn[i];
+            newli.classList.add('li');
+            ul.append(newli);
+            if(newli.textContent==' ')  
+                newli.style.padding='3px 8px'
+        }
+       let minut=0;
+       let secend=0;
+       let sadomsecend=0;
+       let interval;
+        function fortime(){
+           interval=setInterval(() => {
+                sadomsecend++
+                if(secend==60){
+                    minut++;
+                    secend=0;
+                }
+                if(sadomsecend==60){
+                    secend++;
+                    sadomsecend=0;
+                }
+                if(sadomsecend<10&&secend<10&&minut<10)
+                time.innerHTML='0'+minut+' : 0'+secend+' : 0'+sadomsecend;
+               else if(sadomsecend>10&&secend<10&&minut<10)
+                time.innerHTML='0'+minut+' : 0'+secend+' : '+sadomsecend;
+                else if(sadomsecend<10&&secend>10&&minut<10)
+                    time.innerHTML='0'+minut+' :  '+secend+' : 0'+sadomsecend;
+                else if(sadomsecend>10&&secend>10&&minut<10)
+                    time.innerHTML='0'+minut+' :  '+secend+' : '+sadomsecend;
+                else if(sadomsecend>10&&secend>10&&minut>10)
+                    time.innerHTML=minut+' :  '+secend+' : '+sadomsecend;
+                else if(sadomsecend<10&&secend<10&&minut>10)
+                time.innerHTML=minut+' : 0'+secend+' : 0'+sadomsecend;
+                else if(sadomsecend<10&&secend>10&&minut>10)
+                    time.innerHTML=minut+' : '+secend+' : 0'+sadomsecend;
+                else if(sadomsecend>10&&secend<10&&minut>10)
+                    time.innerHTML=minut+' : 0'+secend+' : '+sadomsecend;
+               if(all.length==shomar){
+                   clearInterval(interval)
+               }
+            }, 100);
+        }
+       
+
+
+        function my(event){
+             event.preventDefault();
+           if (shomar<all.length||event.key=='Backspace'){
+                if (worold.includes(event.key.toLowerCase())){
+                    if(shomar==0)
+                        fortime()
+                    if(event.key==matn[shomar]){
+                        all[shomar].style.background='blue';
+                        shomar++;
+                    }
+                    else if(event.key!=matn[shomar]){
+                        all[shomar].style.background='red';
+                        shomar++;
+                    }
+                 
+                }
+                else if(event.key=='Backspace' && shomar>0){
+                    if(all.length==shomar){
+                        fortime()
+                    }
+                    all[shomar-1].style.background='none';
+                    shomar--;
+                 
+                }
+                if(all.length/2==shomar){
+                    window.scrollTo(0,400)
+                }
+            }
+        }
+        function refrshhandler(){
+            clearInterval(interval);
+            for(var t=0;shomar>t;shomar--){
+              all[shomar-1].style.background='none'
+          }
+          time.innerHTML='00:00:00'
+            secend=0;
+            sadomsecend=0;
+            minut=0;
+            shomar=0
+        }
+    </script>
+</body>
+</html>
